@@ -3,7 +3,6 @@ package be.bstorm.Repositories.Impl;
 import be.bstorm.Repositories.CrudJpaRepository;
 import be.bstorm.entities.Utilisateur;
 import jakarta.persistence.*;
-import jakarta.transaction.Transaction;
 
 import java.util.List;
 
@@ -28,16 +27,12 @@ public class CrudJpaRepositoryImpl implements CrudJpaRepository {
         List<Utilisateur> utilisateurs = query.getResultList();
 
 
-
-
         return utilisateurs;
     }
 
     @Override
     public Utilisateur getById(long id) {
         Utilisateur utilisateur = em.find(Utilisateur.class, id);
-
-
 
 
         return utilisateur;
@@ -48,17 +43,41 @@ public class CrudJpaRepositoryImpl implements CrudJpaRepository {
         EntityTransaction et = em.getTransaction();
 
         Utilisateur utilisateurAModifier = getById(id);
-        utilisateurAModifier.setEmail(utilisateur.getEmail());
 
-        et.begin();
-        em.merge(utilisateurAModifier);
-        et.commit();
+        if (utilisateurAModifier != null) {
 
+            if(
+               !utilisateur.getNom().equals("") &&
+               !utilisateurAModifier.getNom().equals(utilisateur.getNom())
+              )
+            {
+                utilisateurAModifier.setNom(utilisateurAModifier.getNom());
+            }
+            if(
+                    !utilisateur.getPrenom().equals("") &&
+                    !utilisateurAModifier.getPrenom().equals(utilisateur.getPrenom())
+            )
+            {
+                utilisateurAModifier.setPrenom(utilisateur.getPrenom());
+            }
+            if(
+                    !utilisateur.getEmail().equals("") &&
+                    !utilisateurAModifier.getEmail().equals(utilisateur.getEmail())
+            )
+            {
+                utilisateurAModifier.setEmail(utilisateur.getEmail());
+            }
 
+            et.begin();
+            em.merge(utilisateurAModifier);
+            et.commit();
 
+            return utilisateurAModifier;
 
-        return utilisateurAModifier;
+        } else {
 
+            return null;
+        }
     }
 
     @Override
@@ -69,8 +88,6 @@ public class CrudJpaRepositoryImpl implements CrudJpaRepository {
         et.begin();
         em.remove(utilisateurASupprimer);
         et.commit();
-
-
 
     }
 

@@ -1,7 +1,9 @@
 package be.bstorm.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 public class Utilisateur {
 

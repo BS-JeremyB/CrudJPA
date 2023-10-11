@@ -1,7 +1,9 @@
 package be.bstorm.entities;
 
 import jakarta.persistence.Embeddable;
+import lombok.Data;
 
+@Data
 @Embeddable
 public class Adresse {
     public Adresse(String rue, int numero, String boite, int cp, String localite) {

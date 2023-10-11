@@ -16,12 +16,9 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         CrudJpaRepository CrudJPA = new CrudJpaRepositoryImpl();
         String choix;
-        int id;
-        Utilisateur u = new Utilisateur("Doe", "John", "doejohn@mail.be",
-                new Adresse("rue TF TIC", 105, null, 6041,"Gosselies"));
-        Utilisateur u2 = new Utilisateur("Doe", "Jane", "doejane@mail.be",
-                        new Adresse("rue du cerisier", 4, null, 6000,"Charleroi"));
-
+        String nom, prenom, email, rue, boite, localite;
+        Utilisateur utilisateur = null;
+        int id, numero, cp;
 
         do{
 
@@ -37,25 +34,59 @@ public class Main {
 
             switch (choix){
                 case "1" :
-                    CrudJPA.create(u);
-                    CrudJPA.create(u2);
+                    System.out.println("Veuillez entrer un nom :");
+                    nom = sc.nextLine();
+                    System.out.println("Veuillez entrer un prenom : ");
+                    prenom = sc.nextLine();
+                    System.out.println("Veuillez entrer un mail :");
+                    email = sc.nextLine();
+                    System.out.println("Veuillez entrer une rue : ");
+                    rue = sc.nextLine();
+                    System.out.println("Veuillez entrer un numero :");
+                    numero = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Veuillez entrer une boite : ");
+                    boite = sc.nextLine();
+                    System.out.println("Veuillez entrer un code postal :");
+                    cp = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Veuillez entrer une localite : ");
+                    localite = sc.nextLine();
+                    CrudJPA.create(new Utilisateur(nom,prenom,email,
+                                   new Adresse(rue,numero,boite,cp,localite)));
                     break;
                 case "2" :
-                    u.setEmail("doejohn@mail.com");
-                    CrudJPA.update(1,u);
+                    System.out.println("Veuillez entrer l'id du contact à modifier :");
+                    id = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Veuillez entrer un nouveau nom ou laisser vide :");
+                    nom = sc.nextLine();
+                    System.out.println("Veuillez entrer un prenom ou laisser vide : ");
+                    prenom = sc.nextLine();
+                    System.out.println("Veuillez entrer un mail ou laisser vide :");
+                    email = sc.nextLine();
+                    utilisateur = CrudJPA.update(id,new Utilisateur(id,nom,prenom,email,
+                                                    null));
+                    System.out.println(utilisateur.toString());
                     break;
                 case "3" :
-                    CrudJPA.delete(1);
+                    System.out.println("Veuillez entrer l'id du contact à supprimer :");
+                    id = sc.nextInt();
+                    sc.nextLine();
+                    CrudJPA.delete(id);
                     break;
                 case "4" :
                     List<Utilisateur> utilisateurs = CrudJPA.getAll();
                     for(Utilisateur user : utilisateurs){
-                        System.out.println(user.getNom()+","+user.getPrenom()+","+ user.getAdresse().getRue());
+                        System.out.println(user.toString());
                     }
                     break;
                 case "5" :
-                    Utilisateur utilisateur = CrudJPA.getById(2);
-                    System.out.println(utilisateur.getNom()+","+utilisateur.getPrenom()+","+ utilisateur.getAdresse().getRue());
+                    System.out.println("Veuillez entrer l'id du contact à afficher :");
+                    id = sc.nextInt();
+                    sc.nextLine();
+                    utilisateur = CrudJPA.getById(id);
+                    System.out.println(utilisateur.toString());
                     break;
                 case "0" :
                     CrudJPA.close();
